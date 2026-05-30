@@ -45,7 +45,7 @@ struct BaseContainerView: View {
             .navigationTitle("Base")
             .navigationBarTitleDisplayMode(.inline)
             .onAppear(perform: syncScene)
-            .onChange(of: sceneSignature) { _ in
+            .onChange(of: sceneSignature) {
                 syncScene()
             }
         }

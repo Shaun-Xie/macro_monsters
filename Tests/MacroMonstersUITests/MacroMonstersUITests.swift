@@ -11,7 +11,7 @@ final class MacroMonstersUITests: XCTestCase {
         XCTAssertTrue(app.textFields["goalCaloriesField"].waitForExistence(timeout: 5))
         app.buttons["startTrackingButton"].tap()
 
-        XCTAssertTrue(app.otherElements["todayDashboard"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.tabBars.buttons["Today"].waitForExistence(timeout: 5))
     }
 
     func testManualFoodEntryUpdatesDailyTotals() {
@@ -64,7 +64,7 @@ final class MacroMonstersUITests: XCTestCase {
         if app.buttons["startTrackingButton"].waitForExistence(timeout: 5) {
             app.buttons["startTrackingButton"].tap()
         }
-        XCTAssertTrue(app.otherElements["todayDashboard"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.tabBars.buttons["Today"].waitForExistence(timeout: 5))
     }
 
     private func setText(_ text: String, in element: XCUIElement) {
