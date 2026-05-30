@@ -41,6 +41,9 @@ struct FoodLogView: View {
                 .padding(.horizontal)
                 .accessibilityIdentifier("servingStepper")
 
+                FoodSearchSourceView(mode: viewModel.searchMode)
+                    .padding(.horizontal)
+
                 if let statusMessage {
                     Text(statusMessage)
                         .font(.callout)
@@ -51,15 +54,32 @@ struct FoodLogView: View {
 
                 List {
                     if viewModel.isSearching {
-                        ProgressView()
-                    } else if let errorMessage = viewModel.errorMessage {
-                        Text(errorMessage)
-                            .foregroundStyle(.secondary)
-                    } else {
-                        ForEach(viewModel.results) { result in
-                            FoodSearchResultRow(result: result) {
-                                addFood(result.foodItem, multiplier: servingMultiplier)
-                            }
+                        HStack {
+                            ProgressView()
+                            Text("Searching foods...")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+
+                    if let errorMessage = viewModel.errorMessage {
+                        FoodSearchMessageRow(
+                            title: "Search unavailable",
+                            message: errorMessage,
+                            actionTitle: "Enter manually",
+                            action: { isManualEntryPresented = true }
+                        )
+                    } else if viewModel.isEmptyResult {
+                        FoodSearchMessageRow(
+                            title: "No foods found",
+                            message: "Try a different search or add the food manually.",
+                            actionTitle: "Enter manually",
+                            action: { isManualEntryPresented = true }
+                        )
+                    }
+
+                    ForEach(viewModel.results) { result in
+                        FoodSearchResultRow(result: result) {
+                            addFood(result.foodItem, multiplier: servingMultiplier)
                         }
                     }
                 }
@@ -95,6 +115,50 @@ struct FoodLogView: View {
         } catch {
             statusMessage = error.localizedDescription
         }
+    }
+}
+
+private struct FoodSearchSourceView: View {
+    var mode: FoodSearchMode
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 8) {
+            Image(systemName: mode == .usda ? "network" : "tray")
+                .foregroundStyle(.secondary)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(mode.title)
+                    .font(.caption.weight(.semibold))
+                Text(mode.detail)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 0)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("foodSearchSourceState")
+    }
+}
+
+private struct FoodSearchMessageRow: View {
+    var title: String
+    var message: String
+    var actionTitle: String
+    var action: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.headline)
+            Text(message)
+                .font(.callout)
+                .foregroundStyle(.secondary)
+            Button(actionTitle, action: action)
+                .buttonStyle(.bordered)
+        }
+        .padding(.vertical, 8)
+        .accessibilityElement(children: .contain)
     }
 }
 

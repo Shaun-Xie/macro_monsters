@@ -81,7 +81,8 @@ xcodebuild test \
 
 ## Latest Validation Results
 
-- `swift test`: 8 tests, 0 failures.
+- Food search and API reliability slice completed on May 30, 2026.
+- `swift test`: 13 tests, 0 failures.
 - `xcodebuild build -scheme MacroMonsters`: build succeeded.
 - `xcodebuild test -scheme MacroMonstersCore`: 8 tests, 0 failures.
 - `xcodebuild test -scheme MacroMonsters`: 4 UI tests, 0 failures.
@@ -103,9 +104,19 @@ Identifiers currently used:
 
 ## USDA Food Search
 
-`FDC_API_KEY` is optional for local development. Without it, the app uses local sample foods plus manual entry.
+`FDC_API_KEY` is optional for local development. Without it, the app uses local sample foods plus manual entry. The Log Food screen labels whether it is using sample foods or USDA search.
 
-To enable USDA FoodData Central search, add `FDC_API_KEY` as an Xcode build setting for the app target. The next recommended implementation slice is to make this setup and failure behavior more reliable.
+To enable USDA FoodData Central search:
+
+1. Open `MacroMonsters.xcodeproj` in Xcode.
+2. Select the `MacroMonsters` project and then the `MacroMonsters` app target.
+3. Open Build Settings.
+4. Add a user-defined setting named `FDC_API_KEY`.
+5. Set it to the USDA FoodData Central API key for the active configuration.
+
+Empty searches show sample foods. API errors are non-blocking and keep manual entry available.
+
+The next recommended implementation slice is Logging flow UX.
 
 ## End Of Slice Checklist
 

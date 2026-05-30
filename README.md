@@ -45,7 +45,18 @@ If using the current Mac setup, the verified simulator is `iPhone 17` with id `5
 
 ## Food Search
 
-Set `FDC_API_KEY` as an Xcode build setting to enable USDA FoodData Central search. If the key is absent, the app uses local sample foods and manual entry still works.
+`FDC_API_KEY` is optional. If the key is absent or still set to an unresolved build-setting placeholder, the app shows local sample foods and manual entry still works.
+
+To enable USDA FoodData Central search:
+
+1. Open `MacroMonsters.xcodeproj` in Xcode.
+2. Select the `MacroMonsters` project in the navigator.
+3. Select the `MacroMonsters` app target.
+4. Open Build Settings.
+5. Add a user-defined setting named `FDC_API_KEY`.
+6. Set its value to your USDA FoodData Central API key for the active configuration.
+
+The Log Food screen shows whether it is currently using sample foods or searching USDA.
 
 ## Tests
 

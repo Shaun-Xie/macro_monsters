@@ -2,7 +2,32 @@ import Foundation
 import MacroMonstersCore
 
 protocol FoodSearchProviding {
+    var searchMode: FoodSearchMode { get }
+
     func search(query: String) async throws -> [FoodSearchResult]
+}
+
+enum FoodSearchMode: Equatable {
+    case sampleFoods
+    case usda
+
+    var title: String {
+        switch self {
+        case .sampleFoods:
+            return "Using sample foods"
+        case .usda:
+            return "Searching USDA"
+        }
+    }
+
+    var detail: String {
+        switch self {
+        case .sampleFoods:
+            return "Add FDC_API_KEY in the MacroMonsters target build settings to enable USDA search."
+        case .usda:
+            return "Sample foods appear for empty searches. USDA FoodData Central is used when you search."
+        }
+    }
 }
 
 enum FoodSearchServiceFactory {
@@ -27,11 +52,16 @@ enum FoodSearchServiceFactory {
 struct FoodDataCentralClient: FoodSearchProviding {
     var apiKey: String
     var session: URLSession = .shared
+    var sampleProvider = LocalFoodSearchProvider()
+
+    var searchMode: FoodSearchMode {
+        .usda
+    }
 
     func search(query: String) async throws -> [FoodSearchResult] {
         let trimmedQuery = query.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedQuery.isEmpty else {
-            return []
+            return try await sampleProvider.search(query: query)
         }
 
         var components = URLComponents(string: "https://api.nal.usda.gov/fdc/v1/foods/search")
@@ -118,6 +148,10 @@ private struct FoodDataCentralNutrient: Decodable {
 }
 
 struct LocalFoodSearchProvider: FoodSearchProviding {
+    var searchMode: FoodSearchMode {
+        .sampleFoods
+    }
+
     private let foods: [FoodSearchResult] = [
         FoodSearchResult(
             id: "local-greek-yogurt",

@@ -12,6 +12,10 @@ let package = Package(
         .library(
             name: "MacroMonstersCore",
             targets: ["MacroMonstersCore"]
+        ),
+        .library(
+            name: "MacroMonstersFoodSearch",
+            targets: ["MacroMonstersFoodSearch"]
         )
     ],
     targets: [
@@ -19,10 +23,32 @@ let package = Package(
             name: "MacroMonstersCore",
             path: "Sources/MacroMonstersCore"
         ),
+        .target(
+            name: "MacroMonstersFoodSearch",
+            dependencies: ["MacroMonstersCore"],
+            path: "Sources/MacroMonstersApp",
+            exclude: [
+                "App",
+                "Game",
+                "Models",
+                "Supporting",
+                "Services/AppStateStore.swift",
+                "Views"
+            ],
+            sources: [
+                "Services/FoodDataCentralClient.swift",
+                "ViewModels/FoodSearchViewModel.swift"
+            ]
+        ),
         .testTarget(
             name: "MacroMonstersCoreTests",
             dependencies: ["MacroMonstersCore"],
             path: "Tests/MacroMonstersCoreTests"
+        ),
+        .testTarget(
+            name: "MacroMonstersFoodSearchTests",
+            dependencies: ["MacroMonstersFoodSearch"],
+            path: "Tests/MacroMonstersFoodSearchTests"
         )
     ]
 )

@@ -19,18 +19,12 @@ This is the living roadmap for continuing Macro Monsters across Codex chats.
 
 ### Now
 
-1. Food search and API reliability.
-   - Confirm `FDC_API_KEY` setup through Xcode build settings.
-   - Add clear loading, empty, and error states for food search.
-   - Keep local sample foods and manual entry as reliable fallbacks.
-   - Add tests for API fallback behavior where practical.
-
-2. Logging flow UX.
+1. Logging flow UX.
    - Move logging from a full tab to a primary action button.
    - Keep the main navigation focused on Today, Base, Upgrades, and Settings.
    - Preserve UI test coverage for food search logging and manual logging.
 
-3. Settings foundation.
+2. Settings foundation.
    - Add a Settings view for app preferences.
    - Add theme selection with System, Light, and Dark modes.
    - Store the preference locally with SwiftData or app storage, whichever best matches the existing app structure.
@@ -109,6 +103,13 @@ xcodebuild test \
 
 ## Latest Slice Notes
 
-- First Xcode validation pass completed.
-- Build and test configuration was corrected.
-- Current recommended next implementation slice: Food search and API reliability.
+- Food search and API reliability slice completed.
+- `FDC_API_KEY` behavior is explicit in the Log Food UI: sample foods are labeled when no key is configured, USDA mode is labeled when a key is present, and empty USDA searches still show sample foods.
+- Search now has stable loading, empty, and non-blocking error states. API failures preserve prior results and leave manual entry available.
+- SwiftPM now includes a test-only `MacroMonstersFoodSearch` target for the app search provider and view model.
+- Verification run on May 30, 2026:
+  - `swift test`: 13 tests, 0 failures.
+  - `xcodebuild build -scheme MacroMonsters`: build succeeded.
+  - `xcodebuild test -scheme MacroMonstersCore`: 8 tests, 0 failures.
+  - `xcodebuild test -scheme MacroMonsters`: 4 UI tests, 0 failures.
+- Current recommended next implementation slice: Logging flow UX.
